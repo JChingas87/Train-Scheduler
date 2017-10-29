@@ -28,71 +28,86 @@
 
 
     <div class="row">
-        <div id="headerPanel" class="col-md-12">
+        <div class="col-md-1"></div>
+        <div id="headerPanel" class="col-md-10">
             <div class="jumbotron">
                 <h1 class="display-3 ">Train Scheduler Tool</h1>
                 <p>Enter your ticket information and the tool will provide the next arrival time and the time until arrival in minutes.</p>
             </div>
         </div>
+        <div class="col-md-1"></div>
     </div>
 
-    <container class="col-md-12">
 
-        <div class="row">
-            <div id="searchPanel" class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Current Train Schedule</h3>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Current Train Schedule</div>
+
+                <!-- Table -->
+                <table class="table table-striped" id="schedule-display">
+                    <!-- <thead> -->
+                    <div id="current-schedule">
+                        <tr>
+                            <th>Train Name</th>
+                            <th>Destination</th>
+                            <th>Frequency (min)</th>
+                            <th>Next Arrival</th>
+                            <th>Minutes Away</th>
+                        </tr>
                     </div>
-                    <div class="panel-body">
-                        <div id="current-schedule">
-                            <tr>
-                                <th>Employee Name</th>
-                                <th>Role</th>
-                                <th>Start Date</th>
-                                <th>Months Worked</th>
-                                <th>Monthly Rate ($)</th>
-                                <th>Total Billed ($)</th>
-                            </tr </div>
+                    <!-- </thead> -->
+                    <!-- <tbody>
+                        <div id="schedule-display">
+
                         </div>
-                    </div>
-                </div>
+                    </tbody> -->
+                </table>
             </div>
         </div>
+        <div class="col-md-1"></div>
+    </div>
 
-        <div class="row">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
             <div class="panel panel-default">
                 <div class="panel-heading">Add Train</div>
                 <div class="panel-body">
                     <form>
                         <div class="form-group">
                             <label>Train Name</label>
-                            <input type="text" class="form-control " id="employeename" placeholder="Train Name">
+                            <input type="text" class="form-control " id="train-name" placeholder="Train Name">
                         </div>
                         <div class="form-group">
                             <label>Destination</label>
-                            <input type="text" class="form-control" id="role" placeholder="Destination">
+                            <input type="text" class="form-control" id="destination" placeholder="Destination">
                         </div>
 
                         <div class="form-group">
                             <label>First Train Time (HH:mm - military time)</label>
-                            <input type="date" class="form-control" id="startDate" placeholder="First Train Time (HH:mm - military time)">
+                            <input type="time" value="12:00 AM" class="form-control" id="first-time" placeholder="When does the first train arrive?">
                         </div>
                         <div class="form-group">
                             <label>Frequency (min)</label>
-                            <input type="number" class="form-control" id="monthlyRate" placeholder="Frequency (min)">
+                            <input type="number" class="form-control" id="frequency" placeholder="How often does this train arrive?">
                         </div>
                         <button id="submitButton" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
-        <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
-        <script src="https://code.jquery.com/jquery.js"></script>
-        <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
-        <script type="text/javascript" src="assets/js/logic.js"></script>
+        <div class="col-md-1"></div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/logic.js"></script>
 
-    </container>
+
 
 
 </body>

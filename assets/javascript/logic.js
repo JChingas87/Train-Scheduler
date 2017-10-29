@@ -13,40 +13,42 @@ var database = firebase.database();
 
 // Initial Values
 var name = "";
-var role = "";
-var startDate = "";
-var monthlyRate = "";
-var monthsWorked = "";
-var totalBilled = "";
+var destination = "";
+var firstTime = "";
+var frequency = "";
+// var monthsWorked = "";
+// var totalBilled = "";
 
 // Capture Button Click
 $("#submitButton").on("click", function(event) {
     event.preventDefault();
 
     // Grabbed values from text-boxes
-    name = $("#employeename").val().trim();
+    name = $("#train-name").val().trim();
     console.log(name);
-    role = $("#role").val().trim();
-    console.log(role);
-    startDate = $("#startDate").val().trim();
-    console.log(startDate);
-    monthlyRate = $("#monthlyRate").val().trim();
-    console.log(monthlyRate);
+    destination = $("#destination").val().trim();
+    console.log(destination);
+    firstTime = $("#first-time").val().trim();
+    console.log(firstTime);
+    frequency = $("#frequency").val().trim();
+    console.log(frequency);
 
-
-    monthsWorked = -(moment(startDate).diff(moment(), "months"));
-    console.log("months worked" + monthsWorked);
-    totalBilled = (monthsWorked * monthlyRate);
-    console.log("total billed: " + totalBilled);
+    if (name == "" && destination == "" && firstTime == "" && frequency == "") {
+        return false;
+    }
+    // monthsWorked = -(moment(startDate).diff(moment(), "months"));
+    // console.log("months worked" + monthsWorked);
+    // totalBilled = (monthsWorked * monthlyRate);
+    // console.log("total billed: " + totalBilled);
 
     // Code for "Setting values in the database"
     database.ref().push({
         name: name,
-        role: role,
-        startDate: startDate,
-        monthlyRate: monthlyRate,
-        monthsWorked: monthsWorked,
-        totalBilled: totalBilled
+        destination: destination,
+        firstTime: firstTime,
+        frequency: frequency
+            // monthsWorked: monthsWorked,
+            // totalBilled: totalBilled
     });
 
 });
@@ -55,21 +57,19 @@ $("#submitButton").on("click", function(event) {
 database.ref().on("child_added", function(childSnapshot) {
     // Log everything that's coming out of snapshot
     console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().role);
-    console.log(childSnapshot.val().startDate);
-    console.log(childSnapshot.val().monthlyRate);
-
-
-
-
+    console.log(childSnapshot.val().destination);
+    console.log(childSnapshot.val().firstTime);
+    console.log(childSnapshot.val().frequency);
 
     // full list of items to the well
-    $("#current-employees").append("<div class='well'><span id='name'> " + childSnapshot.val().name +
-        " </span><span id='email'> " + childSnapshot.val().role +
-        " </span><span id='age'> " + childSnapshot.val().startDate +
-        " </span><span id='comment'> " + childSnapshot.val().monthlyRate +
-        " </span><span id='comment'> " + childSnapshot.val().monthsWorked +
-        " </span><span id='comment'> " + childSnapshot.val().totalBilled + " </span></div>");
+    $("#schedule-display").append("<tr><td id='name'> " + childSnapshot.val().name +
+        " </td><td id='destination'> " + childSnapshot.val().destination +
+        " </td><td id='frequency'> " + childSnapshot.val().frequency + "</td></tr>");
+
+    // $(“.table”).append(“<td id=‘name’> ” + childSnapshot.val().employeename +
+    // ” </td><td id=‘email’> ” + childSnapshot.val().role +
+    // ” </td><td id=‘age’> ” + childSnapshot.val().startdate +
+    // ” </td><td id=‘comment’> ” + childSnapshot.val().monthlyrate + ” </span></div>“);
 
 
     // Handle the errors
