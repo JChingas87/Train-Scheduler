@@ -11,68 +11,99 @@ firebase.initializeApp(config);
 // Create a variable to reference the database.
 var database = firebase.database();
 
-// Initial Values
-var name = "";
-var destination = "";
-var firstTime = "";
-var frequency = "";
-// var monthsWorked = "";
-// var totalBilled = "";
+$(document).ready(function() {
 
-// Capture Button Click
-$("#submitButton").on("click", function(event) {
-    event.preventDefault();
+    // Get elements
 
-    // Grabbed values from text-boxes
-    name = $("#train-name").val().trim();
-    console.log(name);
-    destination = $("#destination").val().trim();
-    console.log(destination);
-    firstTime = $("#first-time").val().trim();
-    console.log(firstTime);
-    frequency = $("#frequency").val().trim();
-    console.log(frequency);
+    const txtEmail = $("#txtEmail");
+    const txtPassword = $("#txtPassword");
+    const btnLogin = $("#btnLogin");
+    const btnSignUp = $("#btnSignUp");
+    const btnLogout = $("#btnLogout");
 
-    if (name == "" && destination == "" && firstTime == "" && frequency == "") {
-        return false;
-    }
-    // monthsWorked = -(moment(startDate).diff(moment(), "months"));
-    // console.log("months worked" + monthsWorked);
-    // totalBilled = (monthsWorked * monthlyRate);
-    // console.log("total billed: " + totalBilled);
-
-    // Code for "Setting values in the database"
-    database.ref().push({
-        name: name,
-        destination: destination,
-        firstTime: firstTime,
-        frequency: frequency
-            // monthsWorked: monthsWorked,
-            // totalBilled: totalBilled
+    // add login event
+    $("#btnLogin").on("click", e => {
+        // Get email and passwork
+        const email = txtEmail.val().trim();
+        const pass = txtPassword.val().trim();
+        const auth = firebase.auth();
+        //Sign Up
+        const promise = auth.signInWithEmailAndPassword(email, pass);
+        promise.catch(e => console.log(e.message));
+    });
+    // Add signup event
+    $("#btnSignUp").on("click", e => {
+        // TODO: Check for real email
+        const email = txtEmail.val().trim();
+        const pass = txtPassword.val().trim();
+        const auth = firebase.auth();
+        //Sign Up
+        const promise = auth.createUserWithEmailAndPassword(email, pass);
+        promise.catch(e => console.log(e.message));
     });
 
-});
+    // signout
+    $("#btnLogout").on("click", e => {
+        firebase.auth().signOut();
+    });
 
 
-database.ref().on("child_added", function(childSnapshot) {
-    // Log everything that's coming out of snapshot
-    console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().destination);
-    console.log(childSnapshot.val().firstTime);
-    console.log(childSnapshot.val().frequency);
+    // add a realtime listener
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+            console.log(firebaseUser);
+            btnLogout.show();
+        } else {
+            console.log('not logged in');
+            btnLogout.hide();
+        }
+    });
 
-    // full list of items to the well
-    $("#schedule-display").append("<tr><td id='name'> " + childSnapshot.val().name +
-        " </td><td id='destination'> " + childSnapshot.val().destination +
-        " </td><td id='frequency'> " + childSnapshot.val().frequency + "</td></tr>");
+    $("#submitButton").on("click", function(event) {
+        event.preventDefault();
 
-    // $(“.table”).append(“<td id=‘name’> ” + childSnapshot.val().employeename +
-    // ” </td><td id=‘email’> ” + childSnapshot.val().role +
-    // ” </td><td id=‘age’> ” + childSnapshot.val().startdate +
-    // ” </td><td id=‘comment’> ” + childSnapshot.val().monthlyrate + ” </span></div>“);
+        var trainScheduler = {
+            trainName: $("#train-name").val().trim(),
+            destination: $("#destination").val().trim(),
+            firstTrainTime: $("#first-time").val(),
+            frequency: $("#frequency").val().trim()
+        };
+
+        console.log(trainScheduler);
+
+        if (trainScheduler.trainName == "" && trainScheduler.destination == "" && trainScheduler.firstTrainTime == "" && trainScheduler.frequency == "") {
+            return false;
+        }
+        // militaryTime = moment(firstTime).format('HHmm');
+        // console.log(militaryTime);
+        // totalBilled = (monthsWorked * monthlyRate);
+        // console.log("total billed: " + totalBilled);
+
+        database.ref().push(trainScheduler);
+
+    });
+
+    database.ref().on("child_added", function(childSnapshot) {
+
+        // Log everything that's coming out of snapshot
+        console.log(childSnapshot.val().trainName);
+        console.log(childSnapshot.val().destination);
+        console.log(childSnapshot.val().firstTrainTime);
+        console.log(childSnapshot.val().frequency);
+
+        // full list of items to the well
+        $("#schedule-display").append("<tr><td id='name'> " + childSnapshot.val().trainName +
+            " </td><td id='destination'> " + childSnapshot.val().destination +
+            " </td><td id='frequency'> " + childSnapshot.val().frequency + "</td></tr>");
+
+        // $(“.table”).append(“<td id=‘name’> ” + childSnapshot.val().employeename +
+        // ” </td><td id=‘email’> ” + childSnapshot.val().role +
+        // ” </td><td id=‘age’> ” + childSnapshot.val().startdate +
+        // ” </td><td id=‘comment’> ” + childSnapshot.val().monthlyrate + ” </span></div>“);
 
 
-    // Handle the errors
-}, function(errorObject) {
-    console.log("Errors handled: " + errorObject.code);
-});
+        // Handle the errors
+    }, function(errorObject) {
+        console.log("Errors handled: " + errorObject.code);
+    });
+})
